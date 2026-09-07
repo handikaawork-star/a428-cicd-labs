@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         NODE_OPTIONS = '--openssl-legacy-provider'
+        CI = 'true'
     }
 
     stages {
@@ -16,25 +17,25 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Build') {
             steps {
                 sh 'npm install'
             }
         }
 
-        stage('Build') {
+        stage('Test') {
             steps {
-                sh 'npm run build'
+                sh './jenkins/scripts/test.sh'
             }
         }
     }
 
     post {
         success {
-            echo 'Build berhasil!'
+            echo 'Pipeline berhasil!'
         }
         failure {
-            echo 'Build gagal, cek log di atas.'
+            echo 'Pipeline gagal, cek log di atas.'
         }
     }
 }
