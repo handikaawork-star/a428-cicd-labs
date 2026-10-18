@@ -17,5 +17,28 @@ services:
       environment:
         - JAVA_OPTS=-Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true
 
+    prometheus:
+      image: prom/prometheus
+      container_name: prometheus
+      ports:
+        - "9090:9090"
+      volumes:
+        - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      depends_on:
+        - jenkins
+      restart: unless-stopped
+
+    grafana:
+      image: grafana/grafana
+      container_name: grafana
+      ports:
+        - "3001:3000"
+      volumes:
+        - grafana_data:/var/lib/grafana
+      depends_on:
+        - prometheus
+      restart: unless-stopped
+
 volumes:
     jenkins_home:
+    grafana_data:
